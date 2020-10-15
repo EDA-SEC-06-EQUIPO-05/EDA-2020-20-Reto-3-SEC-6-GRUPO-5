@@ -37,7 +37,7 @@ operación seleccionada.
 # ___________________________________________________
 
 
-crimefile = 'crime-utf8.csv'
+crimefile = 'us_accidents_dis_2016.csv'
 
 # ___________________________________________________
 #  Menu principal
@@ -50,8 +50,9 @@ def printMenu():
     print("Bienvenido")
     print("1- Inicializar Analizador")
     print("2- Cargar información de accidentes")
-    print("3- Requerimento 1")
-    print("4- Requerimento 2")
+    print("3- Requerimiento 1")
+    print("4- Requerimiento 2")
+    print('5- Requerimiento 3')
     print("0- Salir")
     print("*******************************************")
 
@@ -70,12 +71,20 @@ while True:
 
     elif int(inputs[0]) == 2:
         print("\nCargando información de crimenes ....")
+        controller.loadDataA(cont, accidentsfile)
 
     elif int(inputs[0]) == 3:
         print("\nBuscando crimenes en un rango de fechas: ")
-
+        
     elif int(inputs[0]) == 4:
         print("\nRequerimiento No 1 del reto 3: ")
+        print("\nBuscando accidentes según severidad en una fecha: ")
+        initialDate = input("Fecha (YYYY-MM-DD): ")
+        numoffenses = controller.getAccidentsByRangeSeverity(cont, initialDate)
+        print(numoffenses)
+
+    elif int(inputs[0]) == 5:
+        print("\nRequerimiento No 3 del reto 3: ")
 
     else:
         sys.exit(0)
