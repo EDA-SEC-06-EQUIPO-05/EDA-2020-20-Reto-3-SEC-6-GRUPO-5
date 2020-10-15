@@ -37,7 +37,7 @@ operación seleccionada.
 # ___________________________________________________
 
 
-crimefile = 'us_accidents_dis_2016.csv'
+accidentsfile = 'us_accidents_dis_2016.csv'
 
 # ___________________________________________________
 #  Menu principal
@@ -71,12 +71,9 @@ while True:
 
     elif int(inputs[0]) == 2:
         print("\nCargando información de crimenes ....")
-        controller.loadDataA(cont, accidentsfile)
-
+        controller.loadData(cont, accidentsfile)
+       
     elif int(inputs[0]) == 3:
-        print("\nBuscando crimenes en un rango de fechas: ")
-        
-    elif int(inputs[0]) == 4:
         print("\nRequerimiento No 1 del reto 3: ")
         print("\nBuscando accidentes según severidad en una fecha: ")
         initialDate = input("Fecha (YYYY-MM-DD): ")

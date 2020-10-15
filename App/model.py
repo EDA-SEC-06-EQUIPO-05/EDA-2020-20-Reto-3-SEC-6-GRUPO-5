@@ -63,7 +63,7 @@ def addAccident(analyzer, accident):
     """
     """
     lt.addLast(analyzer['accidents'], accident)
-    updateDateIndexA(analyzer['dateIndex'], accident)
+    updateDateIndex(analyzer['dateIndex'], accident)
     return analyzer
 
 def updateDateIndex(map, accident):
