@@ -54,7 +54,7 @@ def newAnalyzer():
                 'dateIndex': None
                 }
 
-    analyzer['accidents'] = lt.newList('SINGLE_LINKED', compareIds)
+    analyzer['accidents'] = lt.newList('ARRAY_LIST', compareIds)
     analyzer['dateIndex'] = om.newMap(omaptype='RBT',
                                       comparefunction=compareDates)
     return analyzer
@@ -115,7 +115,7 @@ def newDataSeverityEntry(accident):
     entry['severityIndex'] = m.newMap(numelements=30,
                                      maptype='PROBING',
                                      comparefunction=compareSeverity)
-    entry['lstaccidents'] = lt.newList('SINGLE_LINKED', compareDates)
+    entry['lstaccidents'] = lt.newList('ARRAY_LIST', compareDates)
     return entry
 
 def newSeverityEntry(clasificacion, accident):
@@ -125,7 +125,7 @@ def newSeverityEntry(clasificacion, accident):
     """
     acentry = {'severidad': None, 'lstaccidents': None}
     acentry['severidad'] = clasificacion
-    acentry['lstaccidents'] = lt.newList('SINGLELINKED', compareSeverity)
+    acentry['lstaccidents'] = lt.newList('ARRAY_LIST', compareSeverity)
     return acentry
 
 # ==============================
@@ -166,35 +166,49 @@ def maxKey(analyzer):
     """
     return om.maxKey(analyzer['dateIndex'])
 
-
-def getCrimesByRange(analyzer, initialDate, finalDate):
-    """
-    Retorna el numero de crimenes en un rango de fechas.
-    """
-    lst = om.values(analyzer['dateIndex'], initialDate, finalDate)
-    return lst
-
 def getAccidentsByRange(analyzer, initialDate, finalDate):
     """
-    Retorna el numero de accidentes en un rango de fechas.
+    Retorna el numero de accidentes en un rago de fechas.
     """
     lst = om.values(analyzer['dateIndex'], initialDate, finalDate)
-    return lst
+    lstiterator = it.newIterator(lst)
+    totaccidents = 0
+    i = 0
+    lst1 = 0
+    lst2 = 0
+    lst3 = 0
+    lst4 = 0
+    
+    while (it.hasNext(lstiterator)):
+        lstdate = it.next(lstiterator)
+        totaccidents += lt.size(lstdate['lstaccidents'])
+        if lstdate['lstaccidents']['elements'][i]['Severity'] == '1':
+            lst1 += 1
+        elif lstdate['lstaccidents']['elements'][i]['Severity'] == '2':
+            lst2 += 1
+        elif lstdate['lstaccidents']['elements'][i]['Severity'] == '3':
+            lst3 += 1
+        elif lstdate['lstaccidents']['elements'][i]['Severity'] == '4':
+            lst4 += 1
+        i += 1
+    total = [lst1,lst2,lst3,lst4]
 
+    if max(total) == lst1:
+        r = '1'
+    elif max(total) == lst2:
+        r = '2'
+    elif max(total) == lst3:
+        r = '3'
+    elif max(total) == lst4:
+        r = '4'    
+    if totaccidents == 0:
+        res = 'No hubo accidentes en el rango de fechas'
+    else:    
+        res = "\nTotal de accidentes en el rango de fechas: " + str(totaccidents) +'\nLa severidad de accidentes más reportada en este rango de fechas fue: ' + str(r)
+    
+    return res
 
-def getCrimesByRangeCode(analyzer, initialDate, offensecode):
-    """
-    Para una fecha determinada, retorna el numero de crimenes
-    de un tipo especifico.
-    """
-    crimedate = om.get(analyzer['dateIndex'], initialDate)
-    if crimedate['key'] is not None:
-        offensemap = me.getValue(crimedate)['offenseIndex']
-        numoffenses = m.get(offensemap, offensecode)
-        if numoffenses is not None:
-            return m.size(me.getValue(numoffenses)['lstoffenses'])
-        return 0
-
+    
 def getAccidentsByRangeSeverity(analyzer, Date):
     """
     Para una fecha determinada, retorna el numero de accidentes de diferentes severidades.
@@ -203,7 +217,9 @@ def getAccidentsByRangeSeverity(analyzer, Date):
     b = 0
     c = 0
     accidentdate = om.get(analyzer['dateIndex'], Date)
-    
+
+    if accidentdate == None:
+        return 'No hubo accidentes en esta fecha'
     if accidentdate['key'] is not None:
         offensemap = me.getValue(accidentdate)['severityIndex']
         #s =  bs.size(offensemap)

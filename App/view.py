@@ -82,7 +82,11 @@ while True:
 
     elif int(inputs[0]) == 5:
         print("\nRequerimiento No 3 del reto 3: ")
-
+        print("\nBuscando sccidentes en un rango de fechas: ")
+        initialDate = input("Rango Inicial (YYYY-MM-DD): ")
+        finalDate = input("Rango Final (YYYY-MM-DD): ")
+        total = controller.getAccidentsByRange(cont, initialDate, finalDate)
+        print(total)
     else:
         sys.exit(0)
 sys.exit(0)
