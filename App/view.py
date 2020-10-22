@@ -90,6 +90,15 @@ while True:
         total = controller.getAccidentsByRange(cont, initialDate, finalDate)
         print(total)
 
+    elif int(inputs[0]) == 6:
+        print("\nRequerimiento No 4 del reto 3: ")
+        initialDate = input("Rango Inicial (YYYY-MM-DD): ")
+        finalDate = input("Rango Final (YYYY-MM-DD): ")
+        print("\nBuscando accidentes de un estado en el rango de fechas: ")
+        tupla= controller.AccidentsbyState(cont, initialDate, finalDate)
+        print("\nEntre "+str(initialDate)+" y "+str(finalDate)+" el estado con mas accidentes es "+tupla[0]+", con "+str(tupla[1])+" accidentes reportados")
+        print("\nLa fecha con mas accidentes reportados en ese rango fue el "+tupla[2]+", con "+str(tupla[3])+" accidentes reportados ese dia")
+
     elif int(inputs[0]) == 7:
         print("\nRequerimiento No 5 del reto 3: ")
         print("\nBuscando accidentes en un rango de horas: ")

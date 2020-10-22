@@ -214,8 +214,6 @@ def getAccidentsByHourRange(analyzer, initialHour, finalHour):
     Retorna el numero de accidentes en un rago de horas.
     """
     lst = om.values(analyzer['dateIndex'], initialHour, finalHour)
-    #print(analyzer['dateIndex'])
-    print(lst)
     lstiterator = it.newIterator(lst)
     totaccidents = 0
     i = 0
@@ -250,7 +248,6 @@ def getAccidentsByHourRange(analyzer, initialHour, finalHour):
         res = 'No hubo accidentes en el rango de fechas'
     else:    
         res = "\nTotal de accidentes en el rango de fechas: " + str(totaccidents) +'\nLa severidad de accidentes más reportada en este rango de fechas fue: ' + str(r)
-    #print(lstdate['lstaccidents']['elements'][0]['Start_Time'][11:16])
     return res
     
 def getAccidentsByRangeSeverity(analyzer, Date):
@@ -281,7 +278,44 @@ def getAccidentsByRangeSeverity(analyzer, Date):
             d = m.size(me.getValue(numoffenses4)['lstaccidents'])
             return 'Total de accidentes de severidad 1: ' + ' ' + str(a) + '\nTotal de accidentes de severidad 2:' + ' ' + str(b) + '\nTotal de accidentes de severidad 3:' + ' ' + str(c) + '\nTotal de accidentes de severidad 4:' + ' ' + str(d) + '\nTotal de accidentes de la fecha:' + ' ' + str(c+a+b+d)
         return 0
-        
+
+def getAccidentsbyState(analyzer,initialDate,finalDate):
+
+    lst = om.values(analyzer['dateIndex'], initialDate, finalDate)
+    lstiterator = it.newIterator(lst)
+    maximoEstado= ""
+    maximoEstadoNum= 0
+    maximaFechaNum= 0
+    maximaFecha= ""
+    i= 0
+    diccFecha= {}
+    diccEstado= {}
+
+    while (it.hasNext(lstiterator)):
+        lstdate = it.next(lstiterator)
+        if lstdate is not None:
+            state= lstdate['lstaccidents']['elements'][i]['State']
+            if state not in diccEstado:
+                diccEstado[state]= 0
+            diccEstado[state]+= 1
+            fechaEnt= lstdate['lstaccidents']['elements'][i]['Start_Time']
+            date= str(datetime.datetime.strptime(fechaEnt, "%Y-%m-%d %H:%M:%S"))
+            if date not in diccFecha:
+                diccFecha[date]= 0
+            diccFecha[date]+= 1
+        i+= 1
+
+    for estado in diccEstado:
+        if diccEstado[estado]>maximoEstadoNum:
+            maximoEstadoNum= diccEstado[estado]
+            maximoEstado= estado
+
+    for fecha in diccFecha:
+        if diccFecha[fecha]>maximaFechaNum:
+            maximaFechaNum= diccFecha[fecha]
+            maximaFecha= fecha
+
+    return (maximoEstado, maximoEstadoNum, maximaFecha, maximaFechaNum)
 
 # ==============================
 # Funciones de Comparacion

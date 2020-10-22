@@ -136,3 +136,9 @@ def getAccidentsByRangeSeverity(analyzer, initialDate):
     """
     initialDate = datetime.datetime.strptime(initialDate, '%Y-%m-%d')
     return model.getAccidentsByRangeSeverity(analyzer, initialDate.date())
+
+def AccidentsbyState(analyzer,IniDate,FinDate):
+
+    initialDate = datetime.datetime.strptime(IniDate, '%Y-%m-%d')
+    finalDate = datetime.datetime.strptime(FinDate, '%Y-%m-%d')
+    return model.getAccidentsbyState(analyzer, initialDate.date(), finalDate.date())
