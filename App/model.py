@@ -171,6 +171,7 @@ def getAccidentsByRange(analyzer, initialDate, finalDate):
     Retorna el numero de accidentes en un rago de fechas.
     """
     lst = om.values(analyzer['dateIndex'], initialDate, finalDate)
+    #print(lst)
     lstiterator = it.newIterator(lst)
     totaccidents = 0
     i = 0
@@ -205,9 +206,52 @@ def getAccidentsByRange(analyzer, initialDate, finalDate):
         res = 'No hubo accidentes en el rango de fechas'
     else:    
         res = "\nTotal de accidentes en el rango de fechas: " + str(totaccidents) +'\nLa severidad de accidentes más reportada en este rango de fechas fue: ' + str(r)
-    
+
     return res
 
+def getAccidentsByHourRange(analyzer, initialHour, finalHour):
+    """
+    Retorna el numero de accidentes en un rago de horas.
+    """
+    lst = om.values(analyzer['dateIndex'], initialHour, finalHour)
+    #print(analyzer['dateIndex'])
+    print(lst)
+    lstiterator = it.newIterator(lst)
+    totaccidents = 0
+    i = 0
+    lst1 = 0
+    lst2 = 0
+    lst3 = 0
+    lst4 = 0
+    
+    while (it.hasNext(lstiterator)):
+        lstdate = it.next(lstiterator)
+        totaccidents += lt.size(lstdate['lstaccidents'])
+        if lstdate['lstaccidents']['elements'][i]['Severity'] == '1':
+            lst1 += 1
+        elif lstdate['lstaccidents']['elements'][i]['Severity'] == '2':
+            lst2 += 1
+        elif lstdate['lstaccidents']['elements'][i]['Severity'] == '3':
+            lst3 += 1
+        elif lstdate['lstaccidents']['elements'][i]['Severity'] == '4':
+            lst4 += 1
+        i += 1
+    total = [lst1,lst2,lst3,lst4]
+
+    if max(total) == lst1:
+        r = '1'
+    elif max(total) == lst2:
+        r = '2'
+    elif max(total) == lst3:
+        r = '3'
+    elif max(total) == lst4:
+        r = '4'    
+    if totaccidents == 0:
+        res = 'No hubo accidentes en el rango de fechas'
+    else:    
+        res = "\nTotal de accidentes en el rango de fechas: " + str(totaccidents) +'\nLa severidad de accidentes más reportada en este rango de fechas fue: ' + str(r)
+    #print(lstdate['lstaccidents']['elements'][0]['Start_Time'][11:16])
+    return res
     
 def getAccidentsByRangeSeverity(analyzer, Date):
     """

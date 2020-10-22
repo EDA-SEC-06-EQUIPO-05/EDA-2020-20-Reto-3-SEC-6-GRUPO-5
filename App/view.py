@@ -53,6 +53,8 @@ def printMenu():
     print("3- Requerimiento 1")
     print("4- Requerimiento 2")
     print('5- Requerimiento 3')
+    print('6- Requerimiento 4')
+    print('7- Requerimiento 5')
     print("0- Salir")
     print("*******************************************")
 
@@ -82,10 +84,18 @@ while True:
 
     elif int(inputs[0]) == 5:
         print("\nRequerimiento No 3 del reto 3: ")
-        print("\nBuscando sccidentes en un rango de fechas: ")
+        print("\nBuscando accidentes en un rango de fechas: ")
         initialDate = input("Rango Inicial (YYYY-MM-DD): ")
         finalDate = input("Rango Final (YYYY-MM-DD): ")
         total = controller.getAccidentsByRange(cont, initialDate, finalDate)
+        print(total)
+
+    elif int(inputs[0]) == 7:
+        print("\nRequerimiento No 5 del reto 3: ")
+        print("\nBuscando accidentes en un rango de horas: ")
+        initialHour = input("Rango Inicial (HH:MM): ")
+        finalHour = input("Rango Final (HH:MM): ")
+        total = controller.getAccidentsByHourRange(cont, initialHour, finalHour)
         print(total)
     else:
         sys.exit(0)
