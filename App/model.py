@@ -216,7 +216,7 @@ def getAccidentsByHourRange(analyzer, initialHour, finalHour):
     Retorna el numero de accidentes en un rago de horas junto con su severidad más común.
     """
 
-    lst = om.values(analyzer['dateIndex'], initialDate, finalDate)
+    lst = om.values(analyzer['dateIndex'], initialHour, finalHour)
     lstiterator = it.newIterator(lst)
     totaccidents = 0
     lst1 = 0
@@ -297,17 +297,20 @@ def getAccidentsbyState(analyzer,initialDate,finalDate):
 
     while (it.hasNext(lstiterator)):
         lstdate = it.next(lstiterator)
-        if lstdate is not None:
-            state= lstdate['lstaccidents']['elements'][i]['State']
-            if state not in diccEstado:
-                diccEstado[state]= 0
-            diccEstado[state]+= 1
-            fechaEnt= lstdate['lstaccidents']['elements'][i]['Start_Time']
-            date= str(datetime.datetime.strptime(fechaEnt, "%Y-%m-%d %H:%M:%S"))
-            if date not in diccFecha:
-                diccFecha[date]= 0
-            diccFecha[date]+= 1
-        i+= 1
+        i= 0
+        while i<lt.size(lstdate['lstaccidents'])-1:
+            if lstdate is not None:
+                state= lstdate['lstaccidents']['elements'][i]['State']
+                if state not in diccEstado:
+                    diccEstado[state]= 0
+                diccEstado[state]+= 1
+                fechaEnt= lstdate['lstaccidents']['elements'][i]['Start_Time']
+                accidentdate = datetime.datetime.strptime(fechaEnt, '%Y-%m-%d %H:%M:%S')
+                date= str(accidentdate.date())
+                if date not in diccFecha:
+                    diccFecha[date]= 0
+                diccFecha[date]+= 1
+            i+= 1
 
     for estado in diccEstado:
         if diccEstado[estado]>maximoEstadoNum:
