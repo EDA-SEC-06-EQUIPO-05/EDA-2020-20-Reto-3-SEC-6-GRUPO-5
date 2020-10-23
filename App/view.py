@@ -110,8 +110,8 @@ while True:
     elif int(inputs[0]) == 7:
         print("\nRequerimiento No 5 del reto 3: ")
         print("\nBuscando accidentes en un rango de horas: ")
-        initialHour = input("Rango Inicial (HH:MM): ")
-        finalHour = input("Rango Final (HH:MM): ")
+        initialHour = input("Rango Inicial (HH:MM:SS): ")
+        finalHour = input("Rango Final (HH:MM:SS): ")
         total = controller.getAccidentsByHourRange(cont, initialHour, finalHour)
         print(total)
     else:

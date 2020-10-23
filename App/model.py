@@ -57,6 +57,8 @@ def newAnalyzer():
     analyzer['accidents'] = lt.newList('ARRAY_LIST', compareIds)
     analyzer['dateIndex'] = om.newMap(omaptype='RBT',
                                       comparefunction=compareDates)
+    analyzer["hourIndex"] = om.newMap(omaptype='RBT',
+                                      comparefunction=compareHours)
     return analyzer
 
 def addAccident(analyzer, accident):
@@ -64,6 +66,7 @@ def addAccident(analyzer, accident):
     """
     lt.addLast(analyzer['accidents'], accident)
     updateDateIndex(analyzer['dateIndex'], accident)
+    updateHourIndex(analyzer["hourIndex"], accident)
     return analyzer
 
 def updateDateIndex(map, accident):
@@ -86,6 +89,26 @@ def updateDateIndex(map, accident):
     addDateIndex(datentry, accident)
     return map
 
+def updateHourIndex(map, accident):
+    """
+    Se toma la fecha del crimen y se busca si ya existe en el arbol
+    dicha fecha.  Si es asi, se adiciona a su lista de crimenes
+    y se actualiza el indice de tipos de crimenes.
+
+    Si no se encuentra creado un nodo para esa fecha en el arbol
+    se crea y se actualiza el indice de tipos de crimenes
+    """
+    occurreddate = accident['Start_Time']
+    accidentdate = datetime.datetime.strptime(occurreddate, '%Y-%m-%d %H:%M:%S')
+    entry = om.get(map, accidentdate.time())
+    if entry is None:
+        hourentry = newDataSeverityEntryH(accident)
+        om.put(map, accidentdate.time(), hourentry)
+    else:
+        hourentry = me.getValue(entry)
+    addHourIndex(hourentry, accident)
+    return map
+
 def addDateIndex(datentry, accident):
     """
     Actualiza un indice de tipo de crimenes.  Este indice tiene una lista
@@ -106,6 +129,26 @@ def addDateIndex(datentry, accident):
         lt.addLast(entry['lstaccidents'], accident)
     return datentry
 
+def addHourIndex(hourentry, accident):
+    """
+    Actualiza un indice de tipo de crimenes.  Este indice tiene una lista
+    de crimenes y una tabla de hash cuya llave es el tipo de crimen y
+    el valor es una lista con los crimenes de dicho tipo en la fecha que
+    se está consultando (dada por el nodo del arbol)
+    """
+    lst = hourentry['lstaccidents']
+    lt.addLast(lst, accident)
+    severityIndex = hourentry['severityIndex']
+    seventry = m.get(severityIndex, accident['Severity'])
+    if (seventry is None):
+        entry = newSeverityEntry(accident['Severity'], accident)
+        lt.addLast(entry['lstaccidents'], accident)
+        m.put(severityIndex, accident['Severity'], entry)
+    else:
+        entry = me.getValue(seventry)
+        lt.addLast(entry['lstaccidents'], accident)
+    return hourentry
+
 def newDataSeverityEntry(accident):
     """
     Crea una entrada en el indice por fechas, es decir en el arbol
@@ -116,6 +159,18 @@ def newDataSeverityEntry(accident):
                                      maptype='PROBING',
                                      comparefunction=compareSeverity)
     entry['lstaccidents'] = lt.newList('ARRAY_LIST', compareDates)
+    return entry
+
+def newDataSeverityEntryH(accident):
+    """
+    Crea una entrada en el indice por fechas, es decir en el arbol
+    binario.
+    """
+    entry = {'severityIndex': None, 'lstaccidents': None}
+    entry['severityIndex'] = m.newMap(numelements=30,
+                                     maptype='PROBING',
+                                     comparefunction=compareSeverity)
+    entry['lstaccidents'] = lt.newList('ARRAY_LIST', compareHours)
     return entry
 
 def newSeverityEntry(clasificacion, accident):
@@ -216,7 +271,7 @@ def getAccidentsByHourRange(analyzer, initialHour, finalHour):
     Retorna el numero de accidentes en un rago de horas junto con su severidad más común.
     """
 
-    lst = om.values(analyzer['dateIndex'], initialHour, finalHour)
+    lst = om.values(analyzer['hourIndex'], initialHour, finalHour)
     lstiterator = it.newIterator(lst)
     totaccidents = 0
     lst1 = 0
@@ -237,21 +292,15 @@ def getAccidentsByHourRange(analyzer, initialHour, finalHour):
                 lst4 += 1
             i += 1
         totaccidents += lt.size(lstdate['lstaccidents'])
-        
-    total = [lst1,lst2,lst3,lst4]
 
-    if max(total) == lst1:
-        r = '1'
-    elif max(total) == lst2:
-        r = '2'
-    elif max(total) == lst3:
-        r = '3'
-    elif max(total) == lst4:
-        r = '4'    
+    suma_total= lst1+lst2+lst3+lst4
+    long_analyzer= lt.size(analyzer["accidents"])
+    porc = round(suma_total/long_analyzer, 2)
+
     if totaccidents == 0:
         res = 'No hubo accidentes en el rango de fechas'
     else:    
-        res = "\nTotal de accidentes en el rango de fechas: " + str(totaccidents) +'\nLa severidad de accidentes más reportada en este rango de fechas fue: ' + str(r)
+        res = "\nTotal de accidentes en el rango de fechas: " + str(totaccidents) +'\nAccidentes de severidad 1: ' + str(lst1)+"\nAccidentes de severidad 2:  "+str(lst2)+"\nAccidentes de severidad 3:  "+str(lst2)+"\nAccidentes de severidad 4: "+str(lst4)+"\nLos accidentes que se encuentran en el rango representan el "+str(porc)+"%"+" de los accidentes totales"
 
     return res
     
@@ -348,6 +397,18 @@ def compareDates(date1, date2):
     if (date1 == date2):
         return 0
     elif (date1 > date2):
+        return 1
+    else:
+        return -1
+
+def compareHours(hour1, hour2):
+    """
+    Compara dos ids de libros, id es un identificador
+    y entry una pareja llave-valor
+    """
+    if (hour1 == hour2):
+        return 0
+    elif (hour1 > hour2):
         return 1
     else:
         return -1

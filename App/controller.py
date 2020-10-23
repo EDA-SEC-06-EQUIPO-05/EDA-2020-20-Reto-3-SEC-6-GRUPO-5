@@ -124,10 +124,10 @@ def getAccidentsByHourRange(analyzer, initialHour, finalHour):
     """
     Retorna el total de crimenes en un rango de horas
     """
-    initialHour = datetime.datetime.strptime(initialHour, '%H:%M')
-    finalHour = datetime.datetime.strptime(finalHour, '%H:%M')
-    return model.getAccidentsByHourRange(analyzer, initialHour.date(),
-                                  finalHour.date())
+    initialHour = datetime.datetime.strptime(initialHour, '%H:%M:%S')
+    finalHour = datetime.datetime.strptime(finalHour, '%H:%M:%S')
+    return model.getAccidentsByHourRange(analyzer, initialHour.hour(),
+                                  finalHour.hour())
 
 def getAccidentsByRangeSeverity(analyzer, initialDate):
     """
