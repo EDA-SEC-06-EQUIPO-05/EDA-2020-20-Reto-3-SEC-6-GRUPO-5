@@ -82,6 +82,14 @@ while True:
         numoffenses = controller.getAccidentsByRangeSeverity(cont, initialDate)
         print(numoffenses)
 
+    elif int(inputs[0]) == 4:
+        print("\nRequerimiento No 4 del reto 3: ")
+        print("\nBuscando accidentes anteriores de la fecha: ")
+        initialDate = "2016-01-01"
+        finalDate = input("Fecha a buscar (YYYY-MM-DD): ")
+        total = controller.getAccidentsByRange(cont, initialDate, finalDate)
+        print(total)
+
     elif int(inputs[0]) == 5:
         print("\nRequerimiento No 3 del reto 3: ")
         print("\nBuscando accidentes en un rango de fechas: ")
