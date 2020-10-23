@@ -167,19 +167,18 @@ def maxKey(analyzer):
     return om.maxKey(analyzer['dateIndex'])
 
 def getAccidentsByRange(analyzer, initialDate, finalDate):
+#El algoritmo utiliza la función Values del ADT Orderedmap
+#La complejidad del algortimo es O(n^2)
     """
-    Retorna el numero de accidentes en un rago de fechas.
+    Retorna el numero de accidentes en un rago de fechas junto con su severidad más común.
     """
     lst = om.values(analyzer['dateIndex'], initialDate, finalDate)
-    #print(lst)
     lstiterator = it.newIterator(lst)
     totaccidents = 0
     lst1 = 0
     lst2 = 0
     lst3 = 0
     lst4 = 0
-    #n = abs(finalDate-initialDate).days
-    #print(n)
     while (it.hasNext(lstiterator)):
         lstdate = it.next(lstiterator)
         i = 0
@@ -195,8 +194,6 @@ def getAccidentsByRange(analyzer, initialDate, finalDate):
             i += 1
         totaccidents += lt.size(lstdate['lstaccidents'])
         
-    #print(lstdate)
-    #print('i = '+str(i))
     total = [lst1,lst2,lst3,lst4]
 
     if max(total) == lst1:
@@ -216,29 +213,31 @@ def getAccidentsByRange(analyzer, initialDate, finalDate):
 
 def getAccidentsByHourRange(analyzer, initialHour, finalHour):
     """
-    Retorna el numero de accidentes en un rago de horas.
+    Retorna el numero de accidentes en un rago de horas junto con su severidad más común.
     """
-    lst = om.values(analyzer['dateIndex'], initialHour, finalHour)
+
+    lst = om.values(analyzer['dateIndex'], initialDate, finalDate)
     lstiterator = it.newIterator(lst)
     totaccidents = 0
-    i = 0
     lst1 = 0
     lst2 = 0
     lst3 = 0
     lst4 = 0
-    
     while (it.hasNext(lstiterator)):
         lstdate = it.next(lstiterator)
+        i = 0
+        while i<lt.size(lstdate['lstaccidents'])-1:
+            if lstdate['lstaccidents']['elements'][i]['Severity'] == '1':
+                lst1 += 1
+            elif lstdate['lstaccidents']['elements'][i]['Severity'] == '2':
+                lst2 += 1
+            elif lstdate['lstaccidents']['elements'][i]['Severity'] == '3':
+                lst3 += 1
+            elif lstdate['lstaccidents']['elements'][i]['Severity'] == '4':
+                lst4 += 1
+            i += 1
         totaccidents += lt.size(lstdate['lstaccidents'])
-        if lstdate['lstaccidents']['elements'][i]['Severity'] == '1':
-            lst1 += 1
-        elif lstdate['lstaccidents']['elements'][i]['Severity'] == '2':
-            lst2 += 1
-        elif lstdate['lstaccidents']['elements'][i]['Severity'] == '3':
-            lst3 += 1
-        elif lstdate['lstaccidents']['elements'][i]['Severity'] == '4':
-            lst4 += 1
-        i += 1
+        
     total = [lst1,lst2,lst3,lst4]
 
     if max(total) == lst1:
@@ -253,6 +252,7 @@ def getAccidentsByHourRange(analyzer, initialHour, finalHour):
         res = 'No hubo accidentes en el rango de fechas'
     else:    
         res = "\nTotal de accidentes en el rango de fechas: " + str(totaccidents) +'\nLa severidad de accidentes más reportada en este rango de fechas fue: ' + str(r)
+
     return res
     
 def getAccidentsByRangeSeverity(analyzer, Date):
@@ -268,7 +268,6 @@ def getAccidentsByRangeSeverity(analyzer, Date):
         return 'No hubo accidentes en esta fecha'
     if accidentdate['key'] is not None:
         offensemap = me.getValue(accidentdate)['severityIndex']
-        #s =  bs.size(offensemap)
         numoffenses = m.get(offensemap, '1')
         numoffenses2 = m.get(offensemap, '2')
         numoffenses3 = m.get(offensemap, '3')
