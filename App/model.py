@@ -273,7 +273,7 @@ def getAccidentsByHourRange(analyzer, initialHour, finalHour):
 
     lst = om.values(analyzer['hourIndex'], initialHour, finalHour)
     lstiterator = it.newIterator(lst)
-    totaccidents = 0
+    suma_total= 0
     lst1 = 0
     lst2 = 0
     lst3 = 0
@@ -291,16 +291,15 @@ def getAccidentsByHourRange(analyzer, initialHour, finalHour):
             elif lstdate['lstaccidents']['elements'][i]['Severity'] == '4':
                 lst4 += 1
             i += 1
-        totaccidents += lt.size(lstdate['lstaccidents'])
 
     suma_total= lst1+lst2+lst3+lst4
     long_analyzer= lt.size(analyzer["accidents"])
-    porc = round(suma_total/long_analyzer, 2)
+    porc = round((suma_total/long_analyzer)*100, 2)
 
-    if totaccidents == 0:
+    if suma_total == 0:
         res = 'No hubo accidentes en el rango de fechas'
     else:    
-        res = "\nTotal de accidentes en el rango de fechas: " + str(totaccidents) +'\nAccidentes de severidad 1: ' + str(lst1)+"\nAccidentes de severidad 2:  "+str(lst2)+"\nAccidentes de severidad 3:  "+str(lst2)+"\nAccidentes de severidad 4: "+str(lst4)+"\nLos accidentes que se encuentran en el rango representan el "+str(porc)+"%"+" de los accidentes totales"
+        res = "\nTotal de accidentes en el rango de fechas: " + str(suma_total) +'\nAccidentes de severidad 1: ' + str(lst1)+"\nAccidentes de severidad 2:  "+str(lst2)+"\nAccidentes de severidad 3:  "+str(lst3)+"\nAccidentes de severidad 4: "+str(lst4)+"\nLos accidentes que se encuentran en el rango representan el "+str(porc)+"%"+" de los accidentes totales"
 
     return res
     

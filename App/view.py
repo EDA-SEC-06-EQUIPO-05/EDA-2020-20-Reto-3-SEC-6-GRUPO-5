@@ -36,9 +36,6 @@ operación seleccionada.
 #  Ruta a los archivos
 # ___________________________________________________
 
-
-accidentsfile = 'us_accidents_dis_2017.csv'
-
 # ___________________________________________________
 #  Menu principal
 # ___________________________________________________
@@ -48,13 +45,14 @@ def printMenu():
     print("\n")
     print("*******************************************")
     print("Bienvenido")
-    print("1- Inicializar Analizador")
-    print("2- Cargar información de accidentes")
-    print("3- Requerimiento 1")
-    print("4- Requerimiento 2")
-    print('5- Requerimiento 3')
-    print('6- Requerimiento 4')
-    print('7- Requerimiento 5')
+    print("1- Cargar datos")
+    print("2- Inicializar Analizador")
+    print("3- Cargar información de accidentes")
+    print("4- Requerimiento 1")
+    print("5- Requerimiento 2")
+    print('6- Requerimiento 3')
+    print('7- Requerimiento 4')
+    print('8- Requerimiento 5')
     print("0- Salir")
     print("*******************************************")
 
@@ -67,22 +65,26 @@ while True:
     inputs = input('Seleccione una opción para continuar\n>')
 
     if int(inputs[0]) == 1:
+        accidentsfile = input("Ingrese el nombre del archivo CSV: ")
+        print("\nRecopilando datos....")
+
+    elif int(inputs[0]) == 2:
         print("\nInicializando....")
         # cont es el controlador que se usará de acá en adelante
         cont = controller.init()
 
-    elif int(inputs[0]) == 2:
-        print("\nCargando información de crimenes ....")
+    elif int(inputs[0]) == 3:
+        print("\nCargando información de accidentes ....")
         controller.loadData(cont, accidentsfile)
        
-    elif int(inputs[0]) == 3:
+    elif int(inputs[0]) == 4:
         print("\nRequerimiento No 1 del reto 3: ")
         print("\nBuscando accidentes según severidad en una fecha: ")
         initialDate = input("Fecha (YYYY-MM-DD): ")
         numoffenses = controller.getAccidentsByRangeSeverity(cont, initialDate)
         print(numoffenses)
 
-    elif int(inputs[0]) == 4:
+    elif int(inputs[0]) == 5:
         print("\nRequerimiento No 4 del reto 3: ")
         print("\nBuscando accidentes anteriores de la fecha: ")
         initialDate = "2016-01-01"
@@ -90,7 +92,7 @@ while True:
         total = controller.getAccidentsByRange(cont, initialDate, finalDate)
         print(total)
 
-    elif int(inputs[0]) == 5:
+    elif int(inputs[0]) == 6:
         print("\nRequerimiento No 3 del reto 3: ")
         print("\nBuscando accidentes en un rango de fechas: ")
         initialDate = input("Rango Inicial (YYYY-MM-DD): ")
@@ -98,7 +100,7 @@ while True:
         total = controller.getAccidentsByRange(cont, initialDate, finalDate)
         print(total)
 
-    elif int(inputs[0]) == 6:
+    elif int(inputs[0]) == 7:
         print("\nRequerimiento No 4 del reto 3: ")
         initialDate = input("Rango Inicial (YYYY-MM-DD): ")
         finalDate = input("Rango Final (YYYY-MM-DD): ")
@@ -107,7 +109,7 @@ while True:
         print("\nEntre "+str(initialDate)+" y "+str(finalDate)+" el estado con mas accidentes es "+tupla[0]+", con "+str(tupla[1])+" accidentes reportados")
         print("\nLa fecha con mas accidentes reportados en ese rango fue el "+tupla[2]+", con "+str(tupla[3])+" accidentes reportados ese dia")
 
-    elif int(inputs[0]) == 7:
+    elif int(inputs[0]) == 8:
         print("\nRequerimiento No 5 del reto 3: ")
         print("\nBuscando accidentes en un rango de horas: ")
         initialHour = input("Rango Inicial (HH:MM:SS): ")
