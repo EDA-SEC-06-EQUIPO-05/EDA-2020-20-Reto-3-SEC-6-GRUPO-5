@@ -69,7 +69,7 @@ while True:
         print("\nRecopilando datos....")
 
     elif int(inputs[0]) == 2:
-        print("\nInicializando....")
+        print("\nInicializando analizador....")
         # cont es el controlador que se usará de acá en adelante
         cont = controller.init()
 
