@@ -79,14 +79,14 @@ while True:
        
     elif int(inputs[0]) == 4:
         print("\nRequerimiento No 1 del reto 3: ")
-        print("\nBuscando accidentes según severidad en una fecha: ")
+        print("\nAccidentes según severidad en una fecha: ")
         initialDate = input("Fecha (YYYY-MM-DD): ")
         numoffenses = controller.getAccidentsByRangeSeverity(cont, initialDate)
         print(numoffenses)
 
     elif int(inputs[0]) == 5:
         print("\nRequerimiento No 4 del reto 3: ")
-        print("\nBuscando accidentes anteriores de la fecha: ")
+        print("\nAccidentes anteriores a la fecha: ")
         initialDate = "2016-01-01"
         finalDate = input("Fecha a buscar (YYYY-MM-DD): ")
         total = controller.getAccidentsByRange(cont, initialDate, finalDate)
@@ -94,7 +94,7 @@ while True:
 
     elif int(inputs[0]) == 6:
         print("\nRequerimiento No 3 del reto 3: ")
-        print("\nBuscando accidentes en un rango de fechas: ")
+        print("\nAccidentes en un rango de fechas: ")
         initialDate = input("Rango Inicial (YYYY-MM-DD): ")
         finalDate = input("Rango Final (YYYY-MM-DD): ")
         total = controller.getAccidentsByRange(cont, initialDate, finalDate)
@@ -102,16 +102,16 @@ while True:
 
     elif int(inputs[0]) == 7:
         print("\nRequerimiento No 4 del reto 3: ")
+        print("\nAccidentes de un estado en el rango de fechas: ")
         initialDate = input("Rango Inicial (YYYY-MM-DD): ")
         finalDate = input("Rango Final (YYYY-MM-DD): ")
-        print("\nBuscando accidentes de un estado en el rango de fechas: ")
         tupla= controller.AccidentsbyState(cont, initialDate, finalDate)
         print("\nEntre "+str(initialDate)+" y "+str(finalDate)+" el estado con mas accidentes es "+tupla[0]+", con "+str(tupla[1])+" accidentes reportados")
         print("\nLa fecha con mas accidentes reportados en ese rango fue el "+tupla[2]+", con "+str(tupla[3])+" accidentes reportados ese dia")
 
     elif int(inputs[0]) == 8:
         print("\nRequerimiento No 5 del reto 3: ")
-        print("\nBuscando accidentes en un rango de horas: ")
+        print("\nAccidentes en un rango de horas: ")
         initialHour = input("Rango Inicial (HH:MM:SS): ")
         finalHour = input("Rango Final (HH:MM:SS): ")
         total = controller.getAccidentsByHourRange(cont, initialHour, finalHour)
